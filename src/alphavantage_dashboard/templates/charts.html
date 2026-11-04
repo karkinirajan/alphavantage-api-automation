@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Charts{% endblock %}
+{% block content %}
+<h1>Stock charts</h1>
+<form id="chartControls" class="controls" autocomplete="off"
+      data-candles-url="{{ url_for('web.api_candles') }}" data-compare-url="{{ url_for('web.api_compare') }}">
+  <span class="pair"><label for="symbol">Symbol</label>
+  <input id="symbol" list="suggested" value="{{ symbols[0] }}" maxlength="15" required /></span>
+  <datalist id="suggested">{% for s in symbols %}<option value="{{ s }}"></option>{% endfor %}</datalist>
+  <span class="pair"><label for="bullish">Up candle colour</label>
+  <input id="bullish" type="color" value="#2563c9" /></span>
+  <span class="pair"><label for="bearish">Down candle colour</label>
+  <input id="bearish" type="color" value="#b45309" /></span>
+  <button class="button" type="submit">Show</button>
+</form>
+<p id="chartMessage" class="notice" role="status" hidden></p>
+<section class="card wide"><h2>Candlesticks</h2><div id="candles" class="chart"></div></section>
+<section class="card wide"><h2>Closing price</h2><div id="line" class="chart"></div></section>
+<section class="card wide"><h2>Daily high and low</h2><div id="range" class="chart"></div></section>
+<section class="card wide">
+  <h2>Comparison</h2>
+  <form id="compareControls" class="controls" autocomplete="off">
+    <span class="pair"><label for="first">First</label>
+    <input id="first" list="suggested" value="{{ comparison[0] }}" maxlength="15" required /></span>
+    <span class="pair"><label for="second">Second</label>
+    <input id="second" list="suggested" value="{{ comparison[1] }}" maxlength="15" required /></span>
+    <button class="button" type="submit">Compare</button>
+  </form>
+  <p class="muted">Closing prices, each set to 100 on the first day shown, so the two can share one scale.</p>
+  <div id="compare" class="chart"></div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{{ url_for('static', filename='charts.js') }}" defer></script>{% endblock %}

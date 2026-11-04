@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}Market dashboard{% endblock %} | Alpha Vantage dashboard</title>
+    <link rel="icon" href="data:," />
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}" />
+  </head>
+  <body>
+    <header class="nav">
+      <a class="brand" href="{{ url_for('web.index') }}">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="" width="36" height="36" />
+        <span>Market dashboard</span>
+      </a>
+      <nav aria-label="Main">
+        <a href="{{ url_for('web.index') }}">Home</a>
+        <a href="{{ url_for('web.charts') }}">Charts</a>
+        {% if user %}
+        <a href="{{ url_for('web.profile') }}">Profile</a>
+        <form class="inline" method="post" action="{{ url_for('web.logout') }}">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+          <button class="link" type="submit">Log out</button>
+        </form>
+        {% else %}
+        <a href="{{ url_for('web.login') }}">Log in</a>
+        <a href="{{ url_for('web.signup') }}">Register</a>
+        {% endif %}
+      </nav>
+    </header>
+    <main>
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% for category, message in messages %}
+      <p class="flash {{ category }}" role="alert">{{ message }}</p>
+      {% endfor %}
+      {% endwith %}
+      {% block content %}{% endblock %}
+    </main>
+    <footer>Market data from Alpha Vantage. Not investment advice.</footer>
+    {% block scripts %}{% endblock %}
+  </body>
+</html>

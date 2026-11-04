@@ -1,8 +1,0 @@
-{% extends "base.html" %}
-{% block title %}Profile{% endblock %}
-{% block profile %}active{% endblock %}
-
-{% block content %}
-    <h1> Welcome, {{ current_user.fname }} </h1>
-    <a href="{{ url_for('settings' ) }}">Settings</a>
-{% endblock %}

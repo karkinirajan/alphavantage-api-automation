@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<h1>Top movers</h1>
+{% if movers %}
+{% for title, rows in (("Top gainers", movers.top_gainers), ("Top losers", movers.top_losers), ("Most actively traded", movers.most_actively_traded)) %}
+<section class="card wide">
+  <h2>{{ title }}</h2>
+  {% if movers.last_updated %}<p class="muted">Updated {{ movers.last_updated }}</p>{% endif %}
+  {% if rows %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th scope="col">Ticker</th><th scope="col">Price</th><th scope="col">Change</th><th scope="col">Change %</th><th scope="col">Volume</th></tr></thead>
+      <tbody>
+        {% for r in rows %}
+        <tr><th scope="row">{{ r.ticker }}</th><td>{{ r.price }}</td><td>{{ r.change_amount }}</td><td>{{ r.change_percentage }}</td><td>{{ r.volume }}</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="muted">No data for {{ title | lower }}.</p>
+  {% endif %}
+</section>
+{% endfor %}
+{% else %}
+<p class="notice" role="status">The top movers are not available right now. {{ movers_error }}</p>
+{% endif %}
+
+<h1>Market open and close status</h1>
+{% if markets %}
+<div class="markets">
+  {% for m in markets %}
+  <section class="card">
+    <h2>{{ m.region }} <span class="muted">({{ m.market_type }})</span></h2>
+    <p>Exchanges: {{ m.primary_exchanges }}</p>
+    <p>Open {{ m.local_open }} to {{ m.local_close }}</p>
+    <p>Status: <strong class="status {{ 'open' if m.current_status == 'open' else 'closed' }}">{{ m.current_status | capitalize }}</strong></p>
+    {% if m.notes %}<p class="muted">{{ m.notes }}</p>{% endif %}
+  </section>
+  {% endfor %}
+</div>
+{% else %}
+<p class="notice" role="status">The market status is not available right now. {{ market_error }}</p>
+{% endif %}
+{% endblock %}
